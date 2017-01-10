@@ -11,10 +11,10 @@ var watchify = require('watchify');
  */
 gulp.task('artifacts', function() {
 
-    var debug = gulp.src('debug/**/*')
+    var res = gulp.src('res/**/*')
         .pipe(gulp.dest('dist'));
 
-    return merge(debug)
+    return merge(res)
         .pipe(connect.reload());
 });
 
@@ -42,26 +42,13 @@ gulp.task('js', function() {
     b.on('update', flush);    
     flush();
 
-    // var b = browserify({
-    //     entries: [
-    //         //'./node_modules/reflect-metadata/temp/Reflect.js',
-    //         './build//Test.js'
-    //     ],
-    //     debug: true,
-    //     //transform: 'require-globify'
-    // });
-
-    // return b.bundle()
-
-    //     .pipe(connect.reload());
-
 });
 
 /**
  * Watches for various file changes
  */
 gulp.task('watch', function() {
-    gulp.watch(['debug/**/*'], function() {
+    gulp.watch(['res/**/*'], function() {
         setTimeout(function() { gulp.start('make'); }, 200);
     });
 });
