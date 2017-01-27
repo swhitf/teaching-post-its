@@ -13,6 +13,31 @@
                 line-height: 1.2em;
                 background: whitesmoke;
             }
+            #post-it-area {
+                position:relative;
+                float: left;
+                width: 100%;
+                height: 250px;
+            }
+            .post-it {
+                position: relative;
+                width: 200px;
+                height: 200px;
+                box-sizing: border-box; 
+                border: 1px solid lightgray;
+                margin: 10px;
+                padding: 10px;
+                border-radius:1px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+
+            #btnArea {
+                position: relative;
+                float:left;
+                margin: auto;
+                width: 100%;
+                margin: 20px;
+            }
 
         </style>
         <!-- CSS above -->
@@ -21,8 +46,16 @@
     <body>
 
         <!-- Edit HTML below -->
-
-        
+        <div id = 'post-it-area'>
+        <div id = 'p1' class = 'post-it'></div>
+        <div id = 'debug'></div>
+        </div>
+        <div id = 'btnArea'>
+        <button id='greenBtn'>Green</button>
+        <button id='redBtn'>Red</button>
+        <button id='blueBtn'>Blue</button>
+        <button id='orangeBtn'>Orange</button>
+        </div>
 
         <!-- Edit HTML above -->
 
