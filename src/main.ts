@@ -7,16 +7,18 @@ var blueBtn:HTMLElement = document.getElementById('blueBtn');
 var orangeBtn:HTMLElement = document.getElementById('orangeBtn');
 var debug:HTMLElement = document.getElementById('debug');
 var postItArea:HTMLElement = document.getElementById('post-it-area');    
-    
+var body:HTMLElement = document.getElementById('body');    
 
 //set postIt state
 var edited:boolean = false;
 
 //post it starting position parameters
-var x_start:number = 0;
-var y_start:number = 0;
-var offsetX = 0;          
-var offsetY = 0;
+var startX:number;
+var startY:number;
+var posX:number
+var posY:number
+var offsetX:number;
+var offsetY: number;
 
 //create a paragraph element for the post-it
 var msg = document.createElement('p');
@@ -26,28 +28,34 @@ msg.style.padding = '5px';
 //rotate  post-it
 p1.style.transform ='rotate(4deg)';
 
-debug.innerHTML = x_start + ', ' + y_start;
-
 p1.style.backgroundColor = "lightgreen";
+
+//defining the 'draggable' properties of the post-it
 p1.draggable = true;
+p1.style.position = 'relative';
 
 
 //On double clicking on the postit call onEdit
 p1.addEventListener('dblclick',onEdit);
-redBtn.addEventListener('click',onClick);
-greenBtn.addEventListener('click', onClick)
-blueBtn.addEventListener('click', onClick);
-orangeBtn.addEventListener('click', onClick);
+
+
+//On clicking on the buttons call changeColor
+redBtn.addEventListener('click',changeColor);
+greenBtn.addEventListener('click', changeColor);
+blueBtn.addEventListener('click', changeColor);
+orangeBtn.addEventListener('click', changeColor);
 
 //define event listeners on 'draggable post-it
+p1.addEventListener('dragstart',onDragStart);
 p1.addEventListener('drag',onDrag);
 p1.addEventListener('dragend',dragStop);
 
 //define event listeners for 'drop' area (post-it-area)
 postItArea.addEventListener('drop', onDrop);
-postItArea.addEventListener('dragover',dragOver)
+postItArea.addEventListener('dragover',dragOver);
 
-function onClick(e: Event):void {
+
+function changeColor(e: Event):void {
     if (e.srcElement.id == 'redBtn') {
         p1.style.backgroundColor = 'lightcoral';
     }
@@ -62,11 +70,30 @@ function onClick(e: Event):void {
     }
 }
 
-function onDrag(e: Event):void {
-    //trying to find out a way to record the position of the post it so that i can change it... but not succeeding at the moment
-    x_start = e.srcElement.clientLeft;
-    y_start = e.srcElement.clientTop;
-    //animate post-it
+function onDragStart(event:any):void {
+    event.dataTransfer.setData("Text", event.target.id);
+    console.log(event.target);
+    startX= event.clientX;
+    startY= event.clientY;
+    offsetX = extractNumber(event.target.style.left);
+    offsetY = extractNumber(event.target.style.top);
+}
+
+
+function onDrag(event: any):void {
+    event.preventDefault();
+    event.dataTransfer.setData("Text", event.target.id);
+    console.log(event.target);
+    
+    posX= event.clientX+ offsetX - startX;
+    posY= event.clientY+ offsetY - startY;
+
+
+    //event.target.style.left = posX + 'px';
+    //event.target.style.top = posY + 'px';
+
+
+    //animate and highlight post-it
     var color:string = p1.style.backgroundColor;
     p1.style.transform ='rotate(0deg)';
         if (color == 'lightblue') {
@@ -81,12 +108,19 @@ function onDrag(e: Event):void {
     else {
         p1.style.border = '2px solid limegreen';
     }
-    debug.innerHTML = x_start + ', ' + y_start;
+
 }
 
-function dragStop():void {
+function dragStop(event:any):void {
     p1.style.transform ='rotate(4deg)';
     p1.style.border = 'none';
+    event.preventDefault();
+    event.dataTransfer.setData("Text", event.target.id);
+    console.log(event.target);
+       
+    event.target.style.left = posX + 'px';
+    event.target.style.top = posY + 'px';
+
 }
 
 function onDrop(e: Event):void {
@@ -131,7 +165,7 @@ function onEdit():void {
     msgInput.style.overflow = 'hidden';
     msgInput.style.width = '160px';
     msgInput.style.height = '160px';
-    msgInput.maxLength = '160';
+    msgInput.maxLength = 160;
     msgInput.style.margin = 'auto';
     msgInput.style.wordWrap= 'break-word';
 
@@ -195,6 +229,13 @@ function onEdit():void {
     }
 
 
+}
+
+function extractNumber(s:string):number
+{
+    var n = parseInt(s);
+	
+    return n == null || isNaN(n) ? 0 : n;
 }
 
 
