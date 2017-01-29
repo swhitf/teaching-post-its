@@ -71,7 +71,6 @@ function changeColor(e: Event):void {
 }
 
 function onDragStart(event:any):void {
-    event.dataTransfer.setData("Text", event.target.id);
     console.log(event.target);
     startX= event.clientX;
     startY= event.clientY;
@@ -82,40 +81,33 @@ function onDragStart(event:any):void {
 
 function onDrag(event: any):void {
     event.preventDefault();
-    event.dataTransfer.setData("Text", event.target.id);
     console.log(event.target);
     
     posX= event.clientX+ offsetX - startX;
     posY= event.clientY+ offsetY - startY;
 
-
-    //event.target.style.left = posX + 'px';
-    //event.target.style.top = posY + 'px';
-
-
     //animate and highlight post-it
-    var color:string = p1.style.backgroundColor;
-    p1.style.transform ='rotate(0deg)';
+    var color:string = event.target.style.backgroundColor;
+    event.target.style.transform ='rotate(0deg)';
         if (color == 'lightblue') {
-        p1.style.border = '2px solid steelblue'
+        event.target.style.border = '2px solid steelblue'
     }
     else if (color == 'lightcoral') {
-        p1.style.border  = '2px solid red';
+        event.target.style.border  = '2px solid red';
     }
     else if (color =='orange') {
-        p1.style.border = '2px solid orangered';
+        event.target.style.border = '2px solid orangered';
     }
     else {
-        p1.style.border = '2px solid limegreen';
+        event.target.style.border = '2px solid limegreen';
     }
 
 }
 
 function dragStop(event:any):void {
-    p1.style.transform ='rotate(4deg)';
-    p1.style.border = 'none';
+    event.target.style.transform ='rotate(4deg)';
+    event.target.style.border = 'none';
     event.preventDefault();
-    event.dataTransfer.setData("Text", event.target.id);
     console.log(event.target);
        
     event.target.style.left = posX + 'px';
@@ -123,11 +115,10 @@ function dragStop(event:any):void {
 
 }
 
-function onDrop(e: Event):void {
-    e.preventDefault();
+function onDrop(event: any):void {
+    event.preventDefault();
     this.style.border = '';
-    p1.style.transform ='rotate(4deg)';
-    p1.style.border = 'none';
+    event.target.style.border = 'none';
 }
 
 function dragOver(e: Event):void {
@@ -162,11 +153,9 @@ function onEdit():void {
     msgInput.style.borderStyle = 'none';
     msgInput.style.background = 'none';
     p1.appendChild(msgInput);
-    msgInput.style.overflow = 'hidden';
     msgInput.style.width = '160px';
     msgInput.style.height = '160px';
     msgInput.maxLength = 160;
-    msgInput.style.margin = 'auto';
     msgInput.style.wordWrap= 'break-word';
 
 
@@ -190,9 +179,17 @@ function onEdit():void {
 
     document.addEventListener('click',onSave);
 
-    function keyPressed(e: Event):void {
-        var keyName = onkeypress;
-        console.log(keyName)
+    function keyPressed(event: any):void {
+        var keyName:string = event.key;
+        console.log(keyName);
+        switch (keyName) {
+            case 'Enter':
+                onSave();
+                break;
+            default:
+                //Statements executed when none of the values match the value of the expression
+            break;
+        }
 
     }
 
@@ -205,9 +202,9 @@ function onEdit():void {
         }
         else {
             msg.innerHTML = msgInputText;
-            msg.style.maxWidth = '100%';
             msg.style.margin = 'auto';
             msg.style.overflow = 'hidden';
+            msg.style.maxWidth = '100%';
             msg.style.wordWrap= 'break-word';
         }
         p1.removeChild(msgInput);
