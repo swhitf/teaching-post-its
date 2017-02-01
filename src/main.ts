@@ -1,14 +1,11 @@
 //Get hold of the buttons and post-its into a variable
 
-
-var redBtn:HTMLElement = document.getElementById('redBtn');
-var greenBtn:HTMLElement = document.getElementById('greenBtn');
-var blueBtn:HTMLElement = document.getElementById('blueBtn');
-var orangeBtn:HTMLElement = document.getElementById('orangeBtn');
-var newPostIt:HTMLElement = document.getElementById('newPostIt');
 var postItArea:HTMLElement = document.getElementById('post-it-area');    
 var body:HTMLElement = document.getElementById('body');    
-
+var goodPostIts:HTMLElement = document.getElementById('good-post-its');
+var startPostIts:HTMLElement = document.getElementById('start-post-its');
+var badPostIts:HTMLElement = document.getElementById('bad-post-its');
+var stopPostIts:HTMLElement = document.getElementById('stop-post-its');
 
 //post it starting position parameters
 var startX:number;
@@ -18,6 +15,9 @@ var posY:number
 var offsetX:number;
 var offsetY: number;
 
+
+//area
+var whichQuad:string;
 
 //PostIt class
 class PostIt {
@@ -47,25 +47,48 @@ var p1:PostIt = new PostIt(100,100);
 postItArea.addEventListener('dblclick',onEdit);
 
 
-//On clicking on the buttons call changeColor
-redBtn.addEventListener('click',changeColor);
-greenBtn.addEventListener('click', changeColor);
-blueBtn.addEventListener('click', changeColor);
-orangeBtn.addEventListener('click', changeColor);
-
-//On clicking on the New Post It button create a new post-it
-newPostIt.addEventListener('click', function(event) {
-    let postIt = new PostIt(400, 200);
-})
-
 //On double clicking on the post-it area create a new post-it
-postItArea.addEventListener('dblclick', function(event:any)
+goodPostIts.addEventListener('dblclick', function(event:any)
 {
     if (event.target.className !='post-it') {
         var x, y:number;
         x = event.clientX-200;
         y = event.clientY-200;
         let postIt = new PostIt(x,y);
+        postIt.p.style.backgroundColor = 'lightgreen';
+    }
+});
+
+badPostIts.addEventListener('dblclick', function(event:any)
+{
+    if (event.target.className !='post-it') {
+        var x, y:number;
+        x = event.clientX-200;
+        y = event.clientY-200;
+        let postIt = new PostIt(x,y);
+        postIt.p.style.backgroundColor = 'lightcoral';
+    }
+});
+
+startPostIts.addEventListener('dblclick', function(event:any)
+{
+    if (event.target.className !='post-it') {
+        var x, y:number;
+        x = event.clientX-200;
+        y = event.clientY-200;
+        let postIt = new PostIt(x,y);
+        postIt.p.style.backgroundColor = 'lightblue';
+    }
+});
+
+stopPostIts.addEventListener('dblclick', function(event:any)
+{
+    if (event.target.className !='post-it') {
+        var x, y:number;
+        x = event.clientX-200;
+        y = event.clientY-200;
+        let postIt = new PostIt(x,y);
+        postIt.p.style.backgroundColor = 'orange';
     }
 });
 
@@ -75,10 +98,14 @@ postItArea.addEventListener('drag',onDrag);
 postItArea.addEventListener('dragend',dragStop);
 
 //define event listeners for 'drop' area (post-it-area)
-postItArea.addEventListener('drop', onDrop);
-postItArea.addEventListener('dragover',dragOver);
-
-
+goodPostIts.addEventListener('drop', onDrop);
+goodPostIts.addEventListener('dragover', dragOver);
+startPostIts.addEventListener('drop', onDrop);
+startPostIts.addEventListener('dragover', dragOver);
+badPostIts.addEventListener('drop', onDrop);
+badPostIts.addEventListener('dragover', dragOver);
+stopPostIts.addEventListener('drop', onDrop);
+stopPostIts.addEventListener('dragover', dragOver);
 
 
 //changeColor function definition
@@ -145,9 +172,20 @@ function dragStop(event:any):void {
         event.target.style.border = 'none';
         event.preventDefault();
         console.log(event.target);
-        
         event.target.style.left = posX + 'px';
         event.target.style.top = posY + 'px';
+        if (whichQuad == 'bad-post-its') {
+            event.target.style.backgroundColor = 'lightcoral';
+        }
+        else if (whichQuad == 'stop-post-its') {
+            event.target.style.backgroundColor = 'orange';
+        }
+        else if (whichQuad == 'start-post-its') {
+            event.target.style.backgroundColor = 'lightblue';
+        }
+        else {
+            event.target.style.backgroundColor = 'lightgreen';
+        }
     }
 }
 
@@ -157,13 +195,14 @@ function onDrop(event: any):void {
     event.preventDefault();
     this.style.border = '';
     event.target.style.border = 'none';
+    whichQuad = event.target.id;
 }
 
 
 //dragOver function definition
-function dragOver(e: Event):void {
-    e.preventDefault();
-    this.style.border = '3px dotted lightgray';
+function dragOver(event: any):void {
+    event.preventDefault();
+    whichQuad = event.target.id;
 }
 
 
@@ -184,12 +223,6 @@ function onEdit(event: any):void {
             //rotate post it
             event.target.style.transform ='rotate(0deg)';
 
-
-            //make color buttons hidden
-            redBtn.style.visibility = 'hidden';
-            greenBtn.style.visibility = 'hidden';
-            blueBtn.style.visibility = 'hidden';
-            orangeBtn.style.visibility = 'hidden';
             
             //remove previous content
             if (event.target.childElementCount != 0) {
@@ -199,6 +232,9 @@ function onEdit(event: any):void {
             var msgInput = document.createElement('textarea');
             msgInput.style.fontFamily = 'Segoe UI';
             msgInput.placeholder = 'Please enter your message here';
+            if (event.target.msgText != undefined) {
+                msgInput.defaultValue = event.target.msgText;
+            }
             msgInput.style.borderStyle = 'none';
             msgInput.style.background = 'none';
             event.target.appendChild(msgInput);
@@ -259,11 +295,6 @@ function onEdit(event: any):void {
             event.target.removeChild(msgInput);
             event.target.appendChild(msg);
 
-            //make color buttons visible
-            redBtn.style.visibility = 'visible';
-            greenBtn.style.visibility = 'visible';
-            blueBtn.style.visibility = 'visible';
-            orangeBtn.style.visibility = 'visible';
             
             
             event.target.style.backgroundColor = color;
