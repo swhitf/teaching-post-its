@@ -9,6 +9,7 @@
             body {
                 position: relative;
                 padding: 50px 50px 0;
+                margin: 0px;
                 font-family: 'Segoe UI';
                 line-height: 1.2em;
                 background: whitesmoke;
@@ -23,6 +24,24 @@
                 background-color: palegreen;
             }
 
+           .post-it .delete-btn {
+                position: absolute;
+                top: 0;
+                right: 0;
+                margin: 5px;
+                padding: 10;
+            }
+
+            .post-it .input-field {
+                font-family: 'Segoe UI';
+                background-color: inherit;
+                position: absolute;
+                top: 30px;
+                left: 10px;
+                width: 170px;
+                height: 150px;
+            }
+
         </style>
         <!-- CSS above -->
 
@@ -31,15 +50,6 @@
 
         <!-- Edit HTML below -->
 
-        <div id="p1" class="post-it"></div>
-
-        <button id="edit-btn">Edit</button>
-        <button id="save-btn">Save</button>
-
-        <br />
-        <br />
-
-        <input id="msg-input" type="text" />
 
         <!-- Edit HTML above -->
 
