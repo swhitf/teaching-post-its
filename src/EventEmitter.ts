@@ -20,7 +20,8 @@ export class EventEmitter {
         list.push(callback);
     }
 
-    public emit(eventName:string, data:any):void {
+    public emit(eventName:string, data?:any):void {
+        console.log(eventName);
         let list = this.subscribers[eventName];
         if (list != undefined) {
             for (let callback of list) {

@@ -5,15 +5,13 @@ import { EventEmitter, EventCallback } from './EventEmitter';
 
 let board:Board =new Board();
 let visuals:PostItVisual[] = [];
-
+let selected:PostIt = null;
 
 function lookupVisual(post:PostIt):PostItVisual {
         
     for (let i = 0; i < visuals.length; i++) {
         if (visuals[i].post == post) {
-            visuals[i].destroy();
-            visuals.splice(i,i);
-            break;
+            return visuals[i];
         }
     }
     return null;
@@ -23,17 +21,31 @@ window.addEventListener('dblclick', (e:MouseEvent) => {
     let post = new PostIt(e.pageX, e.pageY, 'New Post!');
     board.add(post);
 });
+
 board.addEventListener('added', (data:PostIt) => {
     let visual = new PostItVisual(data);
+    visual.addEventListener('click', () => {
+        if (selected) {
+            lookupVisual(selected).setSelected(false);
+        }
+        selected = visual.post;
+        if (selected) {
+            lookupVisual(selected).setSelected(true);
+        }
+    });
     visual.addEventListener('delete', (data:PostIt):void => {
     board.remove(data);
     });
     visual.addEventListener('edited', (data:PostIt):void => {
-        window.addEventListener('click', (e:MouseEvent)=>{
+        
+        let onWindowClick = (e:MouseEvent)=>{
             e.preventDefault();
             e.stopPropagation();
+            window.removeEventListener('click', onWindowClick);
             data.update(visual.save());
-        });
+        };
+
+        window.addEventListener('click', onWindowClick);
     });
     visuals.push(visual);            
     document.body.appendChild(visual.root);

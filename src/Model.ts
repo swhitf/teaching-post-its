@@ -1,7 +1,6 @@
 import { EventEmitter } from './EventEmitter';
 
 
-
 export class Board extends EventEmitter {
 
     public items:PostIt[]=[];
@@ -9,7 +8,6 @@ export class Board extends EventEmitter {
     public add(post:PostIt):void {
         this.items.push(post);
         this.emit('added',post)
-        console.log('added');
     }
     
     public remove(post:PostIt):void {
@@ -18,12 +16,12 @@ export class Board extends EventEmitter {
             this.items.splice(idx, 1);
             this.emit('removed', post);
         }
-        console.log('removed');
     }
     constructor () {
         super();
     }
 }
+
 export class PostIt extends EventEmitter {
     constructor (public x:number, public y:number, public text:string) {
         super();
@@ -38,7 +36,6 @@ export class PostIt extends EventEmitter {
     public update(text:string):void {
         this.text = text;
         this.emit('updated', this);
-        console.log('updated');
     }
 }
 

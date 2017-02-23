@@ -1,7 +1,7 @@
 import { EventEmitter } from './EventEmitter';
 import { PostIt } from './Model';
 
-export class PostItVisual extends EventEmitter{
+export class PostItVisual extends EventEmitter {
 
     public root:HTMLDivElement;
     private deleteBtn:HTMLButtonElement;
@@ -24,22 +24,18 @@ export class PostItVisual extends EventEmitter{
 
         let inputField = document.createElement('textarea');
         inputField.className = 'input-field';
+        inputField.addEventListener('click', (e:MouseEvent) => {
+            e.stopPropagation();
+        });
 
-        root.addEventListener('dblclick', (e: MouseEvent) => {
+        root.addEventListener('click', () => this.emit('click'));
+
+        root.addEventListener('dblclick', (e:MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
-            if (e.target.className == 'post-it') {
-                inputField.innerText =  post.text;
-                span.innerHTML = '';
-                root.appendChild(inputField);
-                this.inputField = inputField;
-                inputField.focus();
-                this.emit('edited',post);
-            }     
+            this.onEditBegin();
         });
         
-      
-
         let deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
         deleteBtn.innerText = 'X';
@@ -66,5 +62,25 @@ export class PostItVisual extends EventEmitter{
     public save():string {
         var updText:string = this.inputField.value;
         return updText;
+    }
+
+    public setSelected(value:boolean) {
+        if (value) {
+            this.root.classList.add('selected');
+        }
+        else {
+            this.root.classList.remove('selected');
+        }
+    }
+
+    private onEditBegin():void {
+        let { inputField, span, root, post } = this;
+
+        inputField.innerText = post.text;
+        span.innerHTML = '';
+        root.appendChild(inputField);
+        inputField = inputField;
+        inputField.focus();
+        this.emit('edited', post);
     }
 }
