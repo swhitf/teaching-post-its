@@ -1,5 +1,5 @@
 import { EventEmitter } from './EventEmitter';
-import { PostIt } from './Model';
+import { Board, PostIt, Quadrant } from './Model';
 
 export class PostItVisual extends EventEmitter {
 
@@ -7,6 +7,8 @@ export class PostItVisual extends EventEmitter {
     private deleteBtn:HTMLButtonElement;
     private span:HTMLSpanElement;
     private inputField:HTMLTextAreaElement;
+    private type:string;
+
 
     constructor(public post:PostIt) {
         super();
@@ -23,6 +25,7 @@ export class PostItVisual extends EventEmitter {
         root.appendChild(span);
 
         let inputField = document.createElement('textarea');
+        this.inputField = inputField;
         inputField.className = 'input-field';
         inputField.addEventListener('click', (e:MouseEvent) => {
             e.stopPropagation();
@@ -83,4 +86,33 @@ export class PostItVisual extends EventEmitter {
         inputField.focus();
         this.emit('edited', post);
     }
+
+    public setColour() {
+        let type = this.post.getType();
+        console.log(type);
+        this.root.classList.add(type);
+        this.type = type;
+        this.emit('visual changed color', {})
+    }
+}
+export class BoardVisual extends EventEmitter {
+    public root:HTMLElement;
+    constructor(board:Board) {
+        super();
+        let root = document.createElement('div');
+        root.className = 'board';
+        this.root = root;
+    }
+}
+
+export class QuadrantVisual extends BoardVisual {
+    public root:HTMLDivElement;
+    constructor (public quad:Quadrant, public board:Board) {
+        super(board);
+        let root = document.createElement('div');
+        root.innerText = quad.type;
+        root.className = 'quad';
+        this.root = root;
+    }
+
 }

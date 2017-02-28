@@ -17,12 +17,21 @@ export class Board extends EventEmitter {
             this.emit('removed', post);
         }
     }
+
+    public onDragStart() {
+
+    }
+
+    public onDrop() {
+
+    }
     constructor () {
         super();
     }
 }
 
 export class PostIt extends EventEmitter {
+    private type:string;
     constructor (public x:number, public y:number, public text:string) {
         super();
     }
@@ -36,6 +45,22 @@ export class PostIt extends EventEmitter {
     public update(text:string):void {
         this.text = text;
         this.emit('updated', this);
+    }
+
+    public setType(quad:Quadrant, type:string) {
+       // quad.add(this); this gives me a runtime error that the compiler does not find. If Quadrant extends Board why is add not a valid function on quad?
+        this.type = type;
+        this.emit('post it changed type', {})
+    }
+
+    public getType():string {
+        return this.type;
+    }
+}
+
+export class Quadrant extends Board {
+    constructor (public type:string) {
+        super();
     }
 }
 

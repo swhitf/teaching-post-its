@@ -9,10 +9,15 @@
             body {
                 position: relative;
                 padding: 50px 50px 0;
-                margin: 0px;
                 font-family: 'Segoe UI';
                 line-height: 1.2em;
-                background: whitesmoke;
+                background: white;
+                -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none;
             }
 
             .post-it {
@@ -21,7 +26,6 @@
                 padding: 25px;
                 box-sizing: border-box;
                 margin-bottom: 25px;
-                background-color: palegreen;
             }
 
            .post-it .delete-btn {
@@ -45,7 +49,46 @@
             .selected {
                 outline: solid blue 2px;
             }
+            .board {
+                display:block;
+                width:1830px;
+                margin-right:auto;
+                margin-left:auto;
+               /* width: 2000px;
+                height: 1100px;
+                position: absolute;
+                margin-left: -900px;
+                margin-top: -550px;
+                pointer-events: none;
+                user-select: none; */
+            }
 
+            .quad {
+                width: 885px;
+                display: inline-block;
+                margin-right: 30px;
+                margin-bottom: 30px;
+                height: 535px;
+                box-sizing: border-box;
+                background-color: whitesmoke;
+                text-align: center;
+                padding-top: 20px;
+                color: #bbbbbb;
+                font-size: 22px;
+            }
+
+            .good {
+                background-color: lightgreen;
+            }
+            .bad {
+                background-color: palevioletred;
+            }
+            .start {
+                background-color: lightskyblue;
+            }
+            .stop {
+                background-color: orange
+            }
         </style>
         <!-- CSS above -->
 

@@ -1,11 +1,33 @@
-import { PostItVisual } from './Visual';
-import { Board , PostIt} from './Model';
+import { BoardVisual, PostItVisual, QuadrantVisual } from './Visual';
+import { Board , PostIt, Quadrant} from './Model';
 import { EventEmitter, EventCallback } from './EventEmitter';
 
 
+//creating the data model for the board and quads
 let board:Board =new Board();
+let good:Quadrant = new Quadrant('good');
+let bad: Quadrant = new Quadrant('bad');
+let start: Quadrant = new Quadrant('start');
+let stop: Quadrant = new Quadrant('stop');
+
+//creating the visuals for the board and quads.
+let boardVisual:BoardVisual = new BoardVisual(board);
+let goodVisual:QuadrantVisual = new QuadrantVisual(good, board);
+let startVisual:QuadrantVisual = new QuadrantVisual(start, board);
+let badVisual:QuadrantVisual = new QuadrantVisual(bad, board);
+let stopVisual:QuadrantVisual = new QuadrantVisual(stop, board);
+
+
 let visuals:PostItVisual[] = [];
 let selected:PostIt = null;
+
+//add the elements to the document.
+document.body.appendChild(boardVisual.root);
+boardVisual.root.appendChild(goodVisual.root);
+boardVisual.root.appendChild(startVisual.root);
+boardVisual.root.appendChild(badVisual.root);
+boardVisual.root.appendChild(stopVisual.root);
+
 
 function lookupVisual(post:PostIt):PostItVisual {
         
@@ -17,14 +39,22 @@ function lookupVisual(post:PostIt):PostItVisual {
     return null;
 }
 
-window.addEventListener('dblclick', (e:MouseEvent) => {
+window.addEventListener('dblclick', (e:any) => {
+    console.log(e);
     let post = new PostIt(e.pageX, e.pageY, 'New Post!');
+    if (e.target.className == 'quad') {
+        post.setType(e.target, e.target.innerText);
+    }
+    else {
+            good.add(post);
+            post.setType(good, 'good');
+    }
     board.add(post);
 });
 
 board.addEventListener('added', (data:PostIt) => {
     let visual = new PostItVisual(data);
-    visual.addEventListener('click', () => {
+   visual.addEventListener('click', () => {
         if (selected) {
             lookupVisual(selected).setSelected(false);
         }
@@ -47,14 +77,17 @@ board.addEventListener('added', (data:PostIt) => {
 
         window.addEventListener('click', onWindowClick);
     });
-    visuals.push(visual);            
+    visuals.push(visual);
+    visual.setColour();            
     document.body.appendChild(visual.root);
 });
 
 board.addEventListener('removed', (data:PostIt) => {
-    
     for (let i = 0; i < visuals.length; i++) {
         if (visuals[i].post == data) {
+            if (visuals[i].post == selected) {
+                selected = null;
+            }
             visuals[i].destroy();
             visuals.splice(i,i);
             break;
@@ -63,8 +96,7 @@ board.addEventListener('removed', (data:PostIt) => {
 
 });
 
-window['board'] = board;
-window['PostIt'] = PostIt;
+
 
 /*var editBtn: HTMLElement = document.getElementById('edit-btn');
 var saveBtn: HTMLElement = document.getElementById('save-btn');
