@@ -54,7 +54,7 @@ window.addEventListener('dblclick', (e:any) => {
 
 board.addEventListener('added', (data:PostIt) => {
     let visual = new PostItVisual(data);
-   visual.addEventListener('click', () => {
+    visual.addEventListener('click', () => {
         if (selected) {
             lookupVisual(selected).setSelected(false);
         }
@@ -78,7 +78,7 @@ board.addEventListener('added', (data:PostIt) => {
         window.addEventListener('click', onWindowClick);
     });
     visuals.push(visual);
-    visual.setColour();            
+    visual.updateColour();            
     document.body.appendChild(visual.root);
 });
 
@@ -96,7 +96,8 @@ board.addEventListener('removed', (data:PostIt) => {
 
 });
 
-
+window['board'] = board;
+window['PostIt'] = PostIt;
 
 /*var editBtn: HTMLElement = document.getElementById('edit-btn');
 var saveBtn: HTMLElement = document.getElementById('save-btn');

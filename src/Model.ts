@@ -18,13 +18,6 @@ export class Board extends EventEmitter {
         }
     }
 
-    public onDragStart() {
-
-    }
-
-    public onDrop() {
-
-    }
     constructor () {
         super();
     }
@@ -38,7 +31,7 @@ export class PostIt extends EventEmitter {
 
     public moveTo(x:number, y:number):void {
         this.x = x;
-        this.y =y;
+        this.y = y;
         this.emit('moved', {});
     }
 

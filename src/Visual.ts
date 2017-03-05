@@ -9,6 +9,12 @@ export class PostItVisual extends EventEmitter {
     private inputField:HTMLTextAreaElement;
     private type:string;
 
+    private startX:number;
+    private startY:number;
+    private posX:number
+    private posY:number
+    private offsetX:number;
+    private offsetY: number;
 
     constructor(public post:PostIt) {
         super();
@@ -31,7 +37,29 @@ export class PostItVisual extends EventEmitter {
             e.stopPropagation();
         });
 
-        root.addEventListener('click', () => this.emit('click'));
+        root.addEventListener('mousedown', (e:MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.onMouseDown(e.clientX, e.clientY);
+            let onMouseMove = (e:MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation
+                this.posX= e.clientX+ this.offsetX - this.startX;
+                this.posY= e.clientY+ this.offsetY - this.startY;
+                this.root.style.transform = 'rotate(0deg)';
+                this.post.moveTo(this.posX, this.posY);
+                this.emit('mouse move', this.post);
+            }
+            root.addEventListener('mousemove', onMouseMove);
+            root.addEventListener('mouseup', (e:MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation
+                root.removeEventListener('mousemove', onMouseMove)
+                this.onMouseUp(e.clientX, e.clientY);
+            });
+        });
+
+  
 
         root.addEventListener('dblclick', (e:MouseEvent) => {
             e.preventDefault();
@@ -56,6 +84,11 @@ export class PostItVisual extends EventEmitter {
             this.root.removeChild(this.inputField);
         });
 
+        post.addEventListener('moved', () => {
+            this.root.style.left = (this.post.x - 100) + 'px';
+            this.root.style.top = (this.post.y - 100) + 'px';
+        });
+
     }
 
     public destroy():void {
@@ -64,6 +97,8 @@ export class PostItVisual extends EventEmitter {
 
     public save():string {
         var updText:string = this.inputField.value;
+        this.root.style.transform = 'rotate(4deg)';
+        this.root.style.webkitTransform = 'rotate(4deg)';
         return updText;
     }
 
@@ -78,7 +113,8 @@ export class PostItVisual extends EventEmitter {
 
     private onEditBegin():void {
         let { inputField, span, root, post } = this;
-
+        root.style.transform = 'rotate(0deg)';
+        root.style.webkitTransform = 'rotate(0deg)';
         inputField.innerText = post.text;
         span.innerHTML = '';
         root.appendChild(inputField);
@@ -87,13 +123,27 @@ export class PostItVisual extends EventEmitter {
         this.emit('edited', post);
     }
 
-    public setColour() {
+    private onMouseDown(startX:number, startY:number):void {
+        this.startX = startX;
+        this.startY = startY;
+        this.offsetX = this.post.x;
+        this.offsetY = this.post.y;
+        this.emit('drag started', this.post);
+    }
+
+ 
+
+    private onMouseUp(mouseX:number, mouseY:number):void {
+        this.root.style.transform = 'rotate(4deg)';
+    }
+    public updateColour() {
         let type = this.post.getType();
         console.log(type);
         this.root.classList.add(type);
         this.type = type;
         this.emit('visual changed color', {})
     }
+
 }
 export class BoardVisual extends EventEmitter {
     public root:HTMLElement;
@@ -110,6 +160,7 @@ export class QuadrantVisual extends BoardVisual {
     constructor (public quad:Quadrant, public board:Board) {
         super(board);
         let root = document.createElement('div');
+        root.id = quad.type
         root.innerText = quad.type;
         root.className = 'quad';
         this.root = root;
