@@ -39,22 +39,45 @@ function lookupVisual(post:PostIt):PostItVisual {
     return null;
 }
 
-window.addEventListener('dblclick', (e:any) => {
-    console.log(e);
-    let post = new PostIt(e.pageX, e.pageY, 'New Post!');
-    if (e.target.className == 'quad') {
-        post.setType(e.target, e.target.innerText);
+
+function lookupQuad(post:PostIt) {
+    if ((post.x < 900) && (post.y < 550)) {
+        post.setType(good, 'good');
+    }
+    else if ((post.x<900) && ( post.y > 550)) {
+        post.setType(bad, 'bad');
+    }
+    else if ((post.x>900) && (post.y<550)) {
+        post.setType(start, 'start')
     }
     else {
-            good.add(post);
-            post.setType(good, 'good');
+        post.setType(stop, 'stop');
     }
+}
+//unsuccessfull attempt to stop zooming by listening to the mousewheel and key down events...
+document.addEventListener('keydown', (event:KeyboardEvent) => {
+    if (event.ctrlKey) {
+        let onMouseWheel = (event:any)=>{
+             event.preventDefault();
+             event.stopPropagation();
+        }
+        document.removeEventListener('mousewheel', onMouseWheel);
+    document.addEventListener('mousewheel', onMouseWheel);
+    }
+});
+
+window.addEventListener('dblclick', (e:any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    let post = new PostIt(e.pageX, e.pageY, 'New Post!');
+    lookupQuad(post);
     board.add(post);
 });
 
+
 board.addEventListener('added', (data:PostIt) => {
     let visual = new PostItVisual(data);
-    visual.addEventListener('click', () => {
+    visual.root.addEventListener('click', () => {
         if (selected) {
             lookupVisual(selected).setSelected(false);
         }
@@ -77,9 +100,14 @@ board.addEventListener('added', (data:PostIt) => {
 
         window.addEventListener('click', onWindowClick);
     });
+    visual.addEventListener('dropped', (event:any) => {
+        lookupQuad(visual.post);
+        visual.updateColour();
+    });
     visuals.push(visual);
     visual.updateColour();            
     document.body.appendChild(visual.root);
+
 });
 
 board.addEventListener('removed', (data:PostIt) => {
@@ -95,6 +123,7 @@ board.addEventListener('removed', (data:PostIt) => {
     }
 
 });
+
 
 window['board'] = board;
 window['PostIt'] = PostIt;

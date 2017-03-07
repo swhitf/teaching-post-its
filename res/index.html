@@ -7,7 +7,6 @@
 
             body {
                 position: relative;
-                padding: 50px 50px 0;
                 font-family: 'Segoe UI';
                 line-height: 1.2em;
                 background: white;
@@ -17,6 +16,7 @@
                 -moz-user-select: none; /* Firefox */
                 -ms-user-select: none; /* Internet Explorer/Edge */
                 user-select: none;
+                z-index: -1;
             }
 
             .post-it {
@@ -54,17 +54,16 @@
 
         
             .board {
-                display:block;
-                width:1830px;
-                margin-right:auto;
-                margin-left:auto;
-               /* width: 2000px;
+                display: block;
+                width: 2000px;
                 height: 1100px;
-                position: absolute;
-                margin-left: -900px;
-                margin-top: -550px;
+                /*position: absolute;*/
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: auto;
                 pointer-events: none;
-                user-select: none; */
+                user-select: none;
+                z-index: 999;
             }
 
             .quad {

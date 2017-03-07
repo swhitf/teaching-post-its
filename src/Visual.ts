@@ -34,6 +34,7 @@ export class PostItVisual extends EventEmitter {
         this.inputField = inputField;
         inputField.className = 'input-field';
         inputField.addEventListener('click', (e:MouseEvent) => {
+            e.preventDefault();
             e.stopPropagation();
         });
 
@@ -48,15 +49,18 @@ export class PostItVisual extends EventEmitter {
                 this.posY= e.clientY+ this.offsetY - this.startY;
                 this.root.style.transform = 'rotate(0deg)';
                 this.post.moveTo(this.posX, this.posY);
-                this.emit('mouse move', this.post);
+                this.emit('mouse moving PostIt', this.post);
             }
             root.addEventListener('mousemove', onMouseMove);
-            root.addEventListener('mouseup', (e:MouseEvent) => {
+            let mouseUp = (e:MouseEvent)=> {
                 e.preventDefault();
-                e.stopPropagation
-                root.removeEventListener('mousemove', onMouseMove)
+                e.stopPropagation;
+                root.removeEventListener('mousemove', onMouseMove);
                 this.onMouseUp(e.clientX, e.clientY);
-            });
+                this.emit('dropped', e);
+                root.removeEventListener('mouseup',mouseUp);
+            }
+            root.addEventListener('mouseup', mouseUp)
         });
 
   
@@ -139,6 +143,8 @@ export class PostItVisual extends EventEmitter {
     public updateColour() {
         let type = this.post.getType();
         console.log(type);
+        this.root.className = 'post-it';
+        this.root.classList.add('selected');
         this.root.classList.add(type);
         this.type = type;
         this.emit('visual changed color', {})
