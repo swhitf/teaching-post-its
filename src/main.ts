@@ -55,14 +55,10 @@ function lookupQuad(post:PostIt) {
     }
 }
 //unsuccessfull attempt to stop zooming by listening to the mousewheel and key down events...
-document.addEventListener('keydown', (event:KeyboardEvent) => {
+document.addEventListener('mousewheel', (event:MouseWheelEvent) => {
     if (event.ctrlKey) {
-        let onMouseWheel = (event:any)=>{
-             event.preventDefault();
-             event.stopPropagation();
-        }
-        document.removeEventListener('mousewheel', onMouseWheel);
-    document.addEventListener('mousewheel', onMouseWheel);
+        event.preventDefault();
+        event.stopPropagation();
     }
 });
 
