@@ -57,13 +57,12 @@
                 display: block;
                 width: 2000px;
                 height: 1100px;
-                /*position: absolute;*/
+                position: absolute;
                 margin-left: auto;
                 margin-right: auto;
-                margin-top: auto;
                 pointer-events: none;
                 user-select: none;
-                z-index: 999;
+                z-index: -1;
             }
 
             .quad {
@@ -110,7 +109,7 @@
                 word-wrap: break-word;
             }
 
-            .downloadButton {
+            #downloadButton {
                 width: 40px;
                 height: 40px;
                 border-radius: 20px;
@@ -118,12 +117,18 @@
                 border-color: #dedede;
                 z-index: 999;
                 position: absolute;
-                left: 320px;
+                right: 20px;
                 top: 20px;
                 box-sizing: border-box;
                 background-image: url(download.svg);
                 background-size: cover;
                 transition: all 0.25s ease-in-out;
+            }
+
+            #downloadButton:hover{
+                border: 4px solid #6d6d6d;;
+                border-color: #6d6d6d;
+                cursor: pointer;
             }
         </style>
         <!-- CSS above -->
@@ -133,7 +138,7 @@
 
         <!-- Edit HTML below -->
 
-        <div class='downloadButton' alt = 'downlad as CSV'></div>
+        <div id='downloadButton' alt = 'downlad as CSV'></div>
         <!-- Edit HTML above -->
 
     </body>    

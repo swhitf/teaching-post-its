@@ -38,6 +38,14 @@ export class PostItVisual extends EventEmitter {
             e.stopPropagation();
         });
 
+  
+
+        root.addEventListener('dblclick', (e:MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.onEditBegin();
+        });
+        
         root.addEventListener('mousedown', (e:MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
@@ -63,14 +71,7 @@ export class PostItVisual extends EventEmitter {
             root.addEventListener('mouseup', mouseUp)
         });
 
-  
 
-        root.addEventListener('dblclick', (e:MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.onEditBegin();
-        });
-        
         let deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
         deleteBtn.innerText = 'X';
@@ -120,11 +121,11 @@ export class PostItVisual extends EventEmitter {
         root.style.transform = 'rotate(0deg)';
         root.style.webkitTransform = 'rotate(0deg)';
         inputField.innerText = post.text;
+        inputField = inputField;
         span.innerHTML = '';
         root.appendChild(inputField);
-        inputField = inputField;
         inputField.focus();
-        this.emit('edited', post);
+        this.emit('edited', this.post);
     }
 
     private onMouseDown(startX:number, startY:number):void {
@@ -144,7 +145,6 @@ export class PostItVisual extends EventEmitter {
         let type = this.post.getType();
         console.log(type);
         this.root.className = 'post-it';
-        this.root.classList.add('selected');
         this.root.classList.add(type);
         this.type = type;
         this.emit('visual changed color', {})

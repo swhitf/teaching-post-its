@@ -1,6 +1,7 @@
 import { BoardVisual, PostItVisual, QuadrantVisual } from './Visual';
 import { Board , PostIt, Quadrant} from './Model';
 import { EventEmitter, EventCallback } from './EventEmitter';
+import { CSVWriter } from './CSVWriter';
 
 
 //creating the data model for the board and quads
@@ -28,6 +29,20 @@ boardVisual.root.appendChild(startVisual.root);
 boardVisual.root.appendChild(badVisual.root);
 boardVisual.root.appendChild(stopVisual.root);
 
+//grab the download button
+
+var downloadBtn: HTMLElement = document.getElementById('downloadButton');
+
+downloadBtn.addEventListener('click', (event:any)=>{
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('maria');
+    let writer = new CSVWriter(',', '"', '\n');
+    writer.objectArrayToCSV(board.items);
+    writer.writeToFile();
+    board.emit('post its downloaded');
+
+});
 
 function lookupVisual(post:PostIt):PostItVisual {
         
@@ -55,12 +70,12 @@ function lookupQuad(post:PostIt) {
     }
 }
 //unsuccessfull attempt to stop zooming by listening to the mousewheel and key down events...
-document.addEventListener('mousewheel', (event:MouseWheelEvent) => {
+/*document.addEventListener('mousewheel', (event:MouseWheelEvent) => {
     if (event.ctrlKey) {
         event.preventDefault();
         event.stopPropagation();
     }
-});
+});*/
 
 window.addEventListener('dblclick', (e:any) => {
     e.preventDefault();
@@ -73,6 +88,7 @@ window.addEventListener('dblclick', (e:any) => {
 
 board.addEventListener('added', (data:PostIt) => {
     let visual = new PostItVisual(data);
+    
     visual.root.addEventListener('click', () => {
         if (selected) {
             lookupVisual(selected).setSelected(false);
@@ -103,6 +119,13 @@ board.addEventListener('added', (data:PostIt) => {
     visuals.push(visual);
     visual.updateColour();            
     document.body.appendChild(visual.root);
+    if (selected) {
+        lookupVisual(selected).setSelected(false);
+    }
+    selected = visual.post;
+    if (selected) {
+        lookupVisual(selected).setSelected(true);
+    }
 
 });
 
