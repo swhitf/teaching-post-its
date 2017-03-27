@@ -26,6 +26,10 @@ export class PostIt extends EventEmitter {
         super();
     }
 
+    public moveBy(x:number, y:number):void {
+        this.moveTo(this.x + x, this.y + y);
+    }
+
     public moveTo(x:number, y:number):void {
         this.x = x;
         this.y = y;
