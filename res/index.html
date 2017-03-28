@@ -13,6 +13,7 @@
                 font-family: 'Segoe UI';
                 line-height: 1.2em;
                 background: whitesmoke;
+                user-select: none;
             }
 
             .post-it {
@@ -30,6 +31,7 @@
                 width: calc(100% - 25px);
                 bottom: 10px;
                 left: 10px;
+                user-select: auto;
             }
 
             .post-it .btn-delete {
@@ -39,11 +41,27 @@
                 margin: 5px;
             }
 
+            label {
+                font-weight: 600;
+                display: block;
+                margin: 5px 0;
+            }
+
         </style>
         <!-- CSS above -->
 
     </head>
     <body>
+
+        <label>User</label>
+        <input id="user" value="Maria" />
+        <br />
+
+        <label>Board</label>
+        <input id="board" value="1" />
+        <br />
+        <br />
+        <button id="connect">Connect</button>
 
     </body>    
     <script src="https://code.jquery.com/jquery-3.1.1.js"

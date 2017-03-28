@@ -22,7 +22,7 @@ gulp.task('js', function() {
 
     var cfg = {
         entries: [
-            'src/main.ts'
+            'src/client/main.ts'
         ],
         debug: true,
         cache: {},
@@ -66,4 +66,5 @@ gulp.task('serve', ['make', 'watch'], function() {
 });
 
 gulp.task('make', ['js', 'artifacts']);
+gulp.task('makew', ['make', 'watch']);
 gulp.task('default', ['serve']);

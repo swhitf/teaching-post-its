@@ -10,6 +10,10 @@ export class EventEmitter {
     constructor() {
     }
 
+    public on(eventName:string, callback:EventCallback):void {
+        this.addEventListener(eventName, callback);
+    }
+
     public addEventListener(eventName:string, callback:EventCallback):void {
         
         let list = this.subscribers[eventName];

@@ -1,0 +1,78 @@
+OnConnect:
+
+@inputs
+    - Username
+    - BoardId
+
+@logic
+    if a session is open for BoardId then
+        get the session
+    else
+        create a new session
+
+    add user to the session
+    send user current state of board
+
+
+OnMessageFromUser:
+
+@inputs
+    - CommandType [chat, create, update, delete]
+    - Parameters
+
+@logic
+    handle appropriate command
+    distribute command to other users
+    optionally, save the model to disk/database
+
+
+OnChat:
+    type: "chat"
+    text: <string>
+
+@logic
+    distribute command to others
+
+OnCreate:
+
+@inputs
+    type: "create"
+    postId: <number>
+    x: <number>
+    y: <number>
+    text: <string>
+
+@logic
+    create new post
+    add post to post map
+    distribute command to others
+    save the model disk
+
+
+OnUpdate:
+
+@inputs
+    type: "update"
+    postId: <number>
+    x?: <number>
+    y?: <number>
+    text?: <string>
+
+@logic
+    get the post
+    set the new post data values
+    distribute command to others
+    save the model disk
+
+
+OnDelete:
+
+@inputs
+    type: "delete"
+    postId: <number>
+
+@logic
+    get the post
+    remove the post from the map
+    distribute command to others
+    save the model disk

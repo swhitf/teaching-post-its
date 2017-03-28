@@ -10,7 +10,14 @@
   },
   "author": "Stephen Whitfield",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@types/express": "^4.0.35",
+    "@types/shortid": "0.0.28",
+    "@types/ws": "0.0.39",
+    "express": "^4.15.2",
+    "shortid": "^2.2.8",
+    "ws": "^2.2.2"
+  },
   "devDependencies": {
     "browserify": "^13.1.1",
     "gulp": "^3.9.1",

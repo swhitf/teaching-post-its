@@ -1,3 +1,4 @@
+import { ClientSession } from './ClientSession';
 import { EventEmitter } from './EventEmitter';
 import { PostIt } from './Model';
 
@@ -7,7 +8,7 @@ export class PostItVisual extends EventEmitter {
     public root:HTMLDivElement;
     private editor:HTMLTextAreaElement;
 
-    constructor(public post:PostIt) {
+    constructor(public post:PostIt, public session:ClientSession) {
         super();
 
         let root = document.createElement('div');
@@ -32,7 +33,7 @@ export class PostItVisual extends EventEmitter {
         deleteBtn.addEventListener('click', (e:MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
-            this.emit('delete', this.post);
+            this.session.delete(post.id);
         });
         root.appendChild(deleteBtn);
 
@@ -52,6 +53,7 @@ export class PostItVisual extends EventEmitter {
     }
 
     private onDragStart(e:MouseEvent):void {
+        let { post, session } = this;
 
         //On mouse down, we need to record the current mouse position as our reference then
         //attach two listeners to window mousemove and window mouseup to handle the drag.
@@ -66,7 +68,7 @@ export class PostItVisual extends EventEmitter {
 
             if (mx != 0 || my != 0) {
                 //We've moved, so update the post
-                this.post.moveBy(mx, my);
+                session.update(post.id, post.x + mx, post.y + my);
             }
 
             //Then record the new position as the current position for he next updated
@@ -85,19 +87,22 @@ export class PostItVisual extends EventEmitter {
     }
     
     private onEditStart(e:MouseEvent):void {
+        let { editor, post, session } = this;
+
         e.preventDefault();
         e.stopPropagation();
 
-        this.editor.style.display = 'block';
-        this.editor.focus();
-        this.editor.select();
+        editor.style.display = 'block';
+        editor.value = post.text;
+        editor.focus();
+        editor.select();
 
         let onApply = (me:MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
             
-            this.post.update(this.editor.value);
-            this.editor.style.display = 'none';
+            session.update(post.id, undefined, undefined, editor.value);
+            editor.style.display = 'none';
             window.removeEventListener('mousedown', onApply);
         };
 
