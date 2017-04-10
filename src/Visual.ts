@@ -89,6 +89,7 @@ export class PostItVisual extends EventEmitter {
         e.stopPropagation();
 
         this.editor.style.display = 'block';
+        this.editor.value = this.post.text;
         this.editor.focus();
         this.editor.select();
 
